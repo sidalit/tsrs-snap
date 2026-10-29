@@ -1,0 +1,53 @@
+name: tsrs
+base: core26
+version: '0.20.1'
+title: tsrs
+summary: TypeScript compiler and language server written in Rust
+description: |
+  tsrs checks TypeScript projects, emits JavaScript and declarations, and
+  provides incremental builds, watch mode and a language server.
+  The TypeScript standard library declarations are included.
+
+  Run tsrs --noEmit in a project directory to check its types, or use
+  tsrs -p tsconfig.json to compile it. Projects and dependencies must be
+  in non-hidden home directories or connected removable storage.
+license: Apache-2.0
+grade: stable
+confinement: strict
+website: https://github.com/oxc-project/tsrs
+source-code:
+  - https://github.com/oxc-project/tsrs
+  - https://github.com/sidalit/tsrs-snap
+issues:
+  - https://github.com/oxc-project/tsrs/issues
+  - https://github.com/sidalit/tsrs-snap/issues
+contact: https://github.com/sidalit/tsrs-snap/issues
+
+platforms:
+  amd64:
+  arm64:
+
+apps:
+  tsrs:
+    command: lib/tsrs/tsrs
+    plugs:
+      - home
+      - removable-media
+
+parts:
+  tsrs:
+    plugin: rust
+    source: https://github.com/oxc-project/tsrs.git
+    source-tag: v$SNAPCRAFT_PROJECT_VERSION
+    rust-channel: stable
+    rust-path: [crates/tsrs_cli]
+    rust-features: [noembed, mimalloc-safe/no_opt_arch]
+    build-packages:
+      - build-essential
+      - cmake
+    organize:
+      bin/tsrs: lib/tsrs/tsrs
+    override-build: |
+      craftctl default
+      install -Dm644 crates/tsrs_vfs/libs/lib*.d.ts -t "$CRAFT_PART_INSTALL/lib/tsrs"
+      install -Dm644 LICENSE NOTICE licenses/Go-LICENSE -t "$CRAFT_PART_INSTALL/share/doc/tsrs"
