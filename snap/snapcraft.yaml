@@ -1,6 +1,6 @@
 name: tsrs
 base: core26
-version: '0.20.1'
+version: '0.25.0'
 title: tsrs
 summary: TypeScript compiler and language server written in Rust
 description: |
